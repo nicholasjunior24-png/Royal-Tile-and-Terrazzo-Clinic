@@ -31,7 +31,7 @@ function Footer() {
           <h3 className="font-bold text-white mb-3">Contact Us</h3>
           <p className="text-sm">Phone: 0752804572</p>
           <p className="text-sm mt-2">
-            Email: kanyamampagi@gmail.com
+            Email: mpagiarthur@gmail.com
           </p>
           <a
             href="https://wa.me/256752804572"

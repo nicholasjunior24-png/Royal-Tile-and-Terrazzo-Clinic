@@ -51,10 +51,10 @@ function Contact() {
                   Email
                 </p>
                 <a
-                  href="mailto:kanyamampagi@gmail.com"
+                  href="mailto:mpagiarthur@gmail.com"
                   className="text-xl font-semibold text-slate-900 hover:text-amber-600 break-all"
                 >
-                  kanyamampagi@gmail.com
+                  mpagiarthur@gmail.com
                 </a>
               </div>
 
