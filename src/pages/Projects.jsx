@@ -1,113 +1,252 @@
 
-import { Link } from "react-router-dom";
+import { useState } from "react";
 
 const projects = [
   {
-    image: "/images/projects/floor.jpg",
-    title: "Floor Tiling",
+    id: 1,
+    title: "Modern Floor Tile Installation",
     category: "Tile Installation",
+    description: "A clean and modern tiled floor finish for a residential space.",
+    image:
+      "/images/projects/bathroom.webp",
   },
   {
-    image: "/images/projects/terazzo1.jpg",
-    title: "Terrazzo Finish",
-    category: "Terrazzo Installation",
+    id: 2,
+    title: "Premium Terrazzo Flooring",
+    category: "Terrazzo",
+    description: "A smooth terrazzo floor finish designed for durability and style.",
+    image:
+      "/images/projects/terazzo1.jpg",
   },
   {
-    image: "/images/projects/battroom-2.webp",
-    title: "Modern Interior",
-    category: "Wallwork Finishing",
+    id: 3,
+    title: "Polished Interior Flooring",
+    category: "Polishing",
+    description: "A polished floor surface with a clean and refined appearance.",
+    image:
+      "/images/projects/terazzo3.webp",
   },
   {
-    image: "/images/projects/terazzo3.webp",
-    title: "Polished Flooring",
-    category: "Terrazzo Polishing",
+    id: 4,
+    title: "Contemporary Wall Tiling",
+    category: "Tile Installation",
+    description: "Modern wall tile styling for an elegant interior.",
+    image:
+      "/images/projects/battroom-2.webp",
   },
   {
-    image: "/images/projects/Wall-tiling.webp",
-    title: "Wall Tiling Inspection",
-    category: "Tiling",
-  },
-  {
-    image: "/images/projects/wood-tile.webp",
+    id: 5,
     title: "Floor Restoration",
-    category: "Floor Repairs",
+    category: "Restoration",
+    description: "An example of a refreshed floor surface and improved finish.",
+    image:
+      "/images/projects/floor.jpg",
   },
   {
-    image: "/images/projects/pool.webp",
-    title: "Sweeming pool restoration",
-    category: "Sweeming pool work",
+    id: 6,
+    title: "Elegant Terrazzo Interior",
+    category: "Terrazzo",
+    description: "A terrazzo-inspired finish for a modern interior.",
+    image:
+      "/images/projects/wood-tile.webp",
   },
   {
-    image: "/images/projects/corridor.webp",
-    title: "Floor tile foundation",
-    category: "Granite floor"
+    id: 7,
+    title: "Fresh Wall Tile Installation",
+    category: "Wall Tilings",
+    description: "Wall Tile Inspections at site",
+    image: "/images/projects/Wall-tiling.webp"
   },
   {
-    image: "/images/projects/bathroom.webp",
-    title: "Wall Tiling Finishing",
-    category: "Wall Tiling Repair"
+    id: 8,
+    title: "Fresh Path Way Finish",
+    category: "Floor corridor",
+    description: "Finished granite corridor finish",
+    image: "/images/projects/corridor.webp"
+  },
+  {
+    id: 9,
+    title: "Pool Project",
+    category: "Complete Sweeming pool work",
+    description: "complete fine pool tiling",
+    image: "/images/projects/sweeming pool.webp"
+  },
+  {
+    id: 10,
+    title: "Granite Grave work",
+    category: "Complete Granite grave finish",
+    description: "Completed granite grave finishings",
+    image: "/images/projects/grave1.webp"
+  },
+  {
+    id: 11,
+    title: "Terrazzo Grave",
+    category: "Terrazzo grave polishing",
+    description: "Completing polish finishing of grave",
+    image: "/images/projects/terrazo_grave_1.jpg"
+  },
+  {
+    id: 12,
+    title: "Wall pool tile",
+    category: "Floor and Wall tiling",
+    description: "pool tile work in progress",
+    image: "/images/projects/wall-pool.webp"
   }
 ];
 
+const categories = [
+  "All",
+  "Tile Installation",
+  "Terrazzo",
+  "Polishing",
+  "Restoration",
+];
+
 function Projects() {
+  const [activeCategory, setActiveCategory] = useState("All");
+  const [selectedProject, setSelectedProject] = useState(null);
+
+  const filteredProjects =
+    activeCategory === "All"
+      ? projects
+      : projects.filter(
+          (project) => project.category === activeCategory
+        );
+
   return (
-    <div>
-      <section className="bg-slate-950 text-white px-6 py-24">
-        <div className="max-w-7xl mx-auto">
-          <p className="text-amber-400 uppercase tracking-widest font-bold text-sm">
-            Our Portfolio
-          </p>
-          <h1 className="text-4xl md:text-6xl font-bold mt-5">
-            Our Projects
-          </h1>
-          <p className="text-stone-300 mt-6 max-w-2xl text-lg leading-8">
-            Explore flooring and finishing work. Contact us to
-            discuss your own project.
-          </p>
-        </div>
-      </section>
+    <section className="min-h-screen bg-stone-50">
+      {/* Page heading */}
+      <div className="bg-slate-900 px-6 py-20 text-center text-white">
+        <p className="mb-3 font-semibold uppercase tracking-[0.2em] text-amber-400">
+          Our Portfolio
+        </p>
 
-      <section className="max-w-7xl mx-auto px-6 py-20">
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-7">
-          {projects.map((project) => (
-            <article
-              key={project.image}
-              className="group overflow-hidden rounded-xl bg-white shadow-sm"
+        <h1 className="mb-5 text-4xl font-bold md:text-5xl">
+          Our Projects
+        </h1>
+
+        <p className="mx-auto max-w-2xl text-lg text-slate-300">
+          Explore examples of tile installation, terrazzo finishes,
+          floor polishing, and restoration work.
+        </p>
+      </div>
+
+      <div className="mx-auto max-w-7xl px-5 py-16">
+        {/* Category filters */}
+        <div className="mb-10 flex flex-wrap justify-center gap-3">
+          {categories.map((category) => (
+            <button
+              key={category}
+              onClick={() => setActiveCategory(category)}
+              className={`rounded-full px-5 py-3 text-sm font-semibold transition ${
+                activeCategory === category
+                  ? "bg-amber-500 text-slate-950"
+                  : "border border-slate-300 bg-white text-slate-700 hover:border-amber-500 hover:text-amber-600"
+              }`}
             >
-              <div className="overflow-hidden">
-                <img
-                  src={project.image}
-                  alt={project.title}
-                  className="w-full h-72 object-cover group-hover:scale-105 transition duration-500"
-                />
-              </div>
+              {category}
+            </button>
+          ))}
+        </div>
 
-              <div className="p-6">
-                <p className="text-amber-700 uppercase tracking-widest text-xs font-bold">
-                  {project.category}
-                </p>
-                <h2 className="text-xl font-bold text-slate-900 mt-2">
-                  {project.title}
-                </h2>
-              </div>
+        {/* Project gallery */}
+        <div className="grid gap-7 sm:grid-cols-2 lg:grid-cols-3">
+          {filteredProjects.map((project) => (
+            <article
+              key={project.id}
+              className="group overflow-hidden rounded-2xl bg-white shadow-md transition hover:-translate-y-1 hover:shadow-xl"
+            >
+              <button
+                type="button"
+                onClick={() => setSelectedProject(project)}
+                className="block w-full text-left"
+                aria-label={`View ${project.title}`}
+              >
+                <div className="relative h-64 overflow-hidden">
+                  <img
+                    src={project.image}
+                    alt={project.title}
+                    loading="lazy"
+                    className="h-full w-full object-cover transition duration-500 group-hover:scale-110"
+                  />
+
+                  <div className="absolute inset-0 flex items-center justify-center bg-black/0 transition group-hover:bg-black/30">
+                    <span className="rounded-full bg-white px-5 py-2 font-semibold text-slate-900 opacity-0 transition group-hover:opacity-100">
+                      View Project
+                    </span>
+                  </div>
+                </div>
+
+                <div className="p-6">
+                  <p className="mb-2 text-sm font-semibold text-amber-600">
+                    {project.category}
+                  </p>
+
+                  <h2 className="mb-3 text-xl font-bold text-slate-900">
+                    {project.title}
+                  </h2>
+
+                  <p className="text-sm leading-6 text-slate-600">
+                    {project.description}
+                  </p>
+                </div>
+              </button>
             </article>
           ))}
         </div>
 
-        <div className="text-center mt-14">
-          <p className="text-slate-600 mb-6">
-            Interested in having us work on your next project?
+        {/* Empty state */}
+        {filteredProjects.length === 0 && (
+          <p className="py-16 text-center text-slate-600">
+            No projects found in this category.
           </p>
-          <Link
-            to="/quote"
-            className="inline-block bg-amber-500 hover:bg-amber-400 text-slate-950 px-8 py-4 rounded font-bold"
+        )}
+      </div>
+
+      {/* Image lightbox */}
+      {selectedProject && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-4"
+          onClick={() => setSelectedProject(null)}
+        >
+          <div
+            className="relative w-full max-w-4xl overflow-hidden rounded-xl bg-white"
+            onClick={(event) => event.stopPropagation()}
           >
-            Request a Quotation
-          </Link>
+            <button
+              type="button"
+              onClick={() => setSelectedProject(null)}
+              className="absolute right-4 top-4 z-10 rounded-full bg-black/70 px-4 py-2 text-xl text-white hover:bg-black"
+              aria-label="Close image"
+            >
+              ×
+            </button>
+
+            <img
+              src={selectedProject.image}
+              alt={selectedProject.title}
+              className="max-h-[70vh] w-full object-cover"
+            />
+
+            <div className="p-6">
+              <p className="mb-2 font-semibold text-amber-600">
+                {selectedProject.category}
+              </p>
+
+              <h2 className="mb-2 text-2xl font-bold text-slate-900">
+                {selectedProject.title}
+              </h2>
+
+              <p className="text-slate-600">
+                {selectedProject.description}
+              </p>
+            </div>
+          </div>
         </div>
-      </section>
-    </div>
+      )}
+    </section>
   );
 }
 
 export default Projects;
+

@@ -1,172 +1,236 @@
 
 import { useState } from "react";
+import { submitQuotation } from "../services/api";
 
 function Quote() {
-  const [form, setForm] = useState({
-    name: "",
-    phone: "",
+  const [formData, setFormData] = useState({
+    customer_name: "",
+    phone_number: "",
+    email: "",
     service: "",
     location: "",
-    details: "",
+    description: "",
   });
 
+  const [loading, setLoading] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+
   function handleChange(event) {
-    setForm({
-      ...form,
-      [event.target.name]: event.target.value,
-    });
+    const { name, value } = event.target;
+
+    setFormData((previousData) => ({
+      ...previousData,
+      [name]: value,
+    }));
   }
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault();
 
-    const message = `
-Hello Royal Tile and Terrazzo Clinic.
+    setLoading(true);
+    setSuccessMessage("");
+    setErrorMessage("");
 
-I would like to request a quotation.
+    try {
+      const quotation = await submitQuotation(formData);
 
-Name: ${form.name}
-Phone: ${form.phone}
-Service: ${form.service}
-Project location: ${form.location}
+      setSuccessMessage(
+        `Your quotation request has been submitted successfully! Reference number: ${quotation.id}. We will contact you soon.`
+      );
 
-Project details:
-${form.details}
-    `;
-
-    const whatsappURL =
-      `https://wa.me/256752804572?text=${encodeURIComponent(message)}`;
-
-    window.open(whatsappURL, "_blank", "noopener,noreferrer");
+      setFormData({
+        customer_name: "",
+        phone_number: "",
+        email: "",
+        service: "",
+        location: "",
+        description: "",
+      });
+    } catch (error) {
+      setErrorMessage(
+        error.message || "Something went wrong. Please try again."
+      );
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
-    <div>
-      <section className="bg-slate-950 text-white px-6 py-24">
-        <div className="max-w-7xl mx-auto">
-          <p className="text-amber-400 uppercase tracking-widest font-bold text-sm">
-            Start Your Project
+    <section className="min-h-screen bg-stone-50 px-5 py-16">
+      <div className="mx-auto max-w-3xl">
+
+        <div className="mb-10 text-center">
+          <p className="mb-3 font-semibold uppercase tracking-widest text-amber-600">
+            Get Started
           </p>
-          <h1 className="text-4xl md:text-6xl font-bold mt-5">
+
+          <h1 className="mb-4 text-4xl font-bold text-slate-900 md:text-5xl">
             Request a Quotation
           </h1>
-          <p className="text-stone-300 mt-6 max-w-2xl text-lg">
-            Share a few details about your project.
-            We'll prepare your inquiry for WhatsApp.
+
+          <p className="text-slate-600">
+            Tell us about your flooring or tiling project.
+            Our team will review your request and get in touch.
           </p>
         </div>
-      </section>
 
-      <section className="max-w-4xl mx-auto px-6 py-20">
         <form
           onSubmit={handleSubmit}
-          className="bg-white p-7 md:p-10 rounded-xl shadow-lg border border-stone-200"
+          className="space-y-6 rounded-2xl bg-white p-6 shadow-lg md:p-10"
         >
-          <h2 className="text-2xl font-bold text-slate-900 mb-8">
-            Your Project Details
-          </h2>
 
-          <div className="grid md:grid-cols-2 gap-6">
-
-            <div>
-              <label className="block font-semibold mb-2">
-                Your Name *
-              </label>
-              <input
-                type="text"
-                name="name"
-                value={form.name}
-                onChange={handleChange}
-                required
-                className="w-full border border-stone-300 rounded-lg p-3 outline-none focus:ring-2 focus:ring-amber-500"
-                placeholder="Enter your name"
-              />
+          {successMessage && (
+            <div
+              role="status"
+              className="rounded-lg border border-green-200 bg-green-50 p-4 text-green-800"
+            >
+              {successMessage}
             </div>
+          )}
 
-            <div>
-              <label className="block font-semibold mb-2">
-                Phone Number *
-              </label>
-              <input
-                type="tel"
-                name="phone"
-                value={form.phone}
-                onChange={handleChange}
-                required
-                className="w-full border border-stone-300 rounded-lg p-3 outline-none focus:ring-2 focus:ring-amber-500"
-                placeholder="Your phone number"
-              />
+          {errorMessage && (
+            <div
+              role="alert"
+              className="rounded-lg border border-red-200 bg-red-50 p-4 text-red-700"
+            >
+              {errorMessage}
             </div>
+          )}
 
-            <div>
-              <label className="block font-semibold mb-2">
-                Service Required *
-              </label>
-              <select
-                name="service"
-                value={form.service}
-                onChange={handleChange}
-                required
-                className="w-full border border-stone-300 rounded-lg p-3 outline-none focus:ring-2 focus:ring-amber-500"
-              >
-                <option value="">Choose a service</option>
-                <option>Tile Installation</option>
-                <option>Terrazzo Installation</option>
-                <option>Terrazzo Polishing</option>
-                <option>Floor Repairs and Restoration</option>
-                <option>Tile Supply and Sales</option>
-                <option>Wall and Floor Tiling</option>
-                <option>Other</option>
-              </select>
-            </div>
+          <div>
+            <label className="mb-2 block font-semibold text-slate-800">
+              Full Name *
+            </label>
 
-            <div>
-              <label className="block font-semibold mb-2">
-                Project Location *
-              </label>
-              <input
-                type="text"
-                name="location"
-                value={form.location}
-                onChange={handleChange}
-                required
-                className="w-full border border-stone-300 rounded-lg p-3 outline-none focus:ring-2 focus:ring-amber-500"
-                placeholder="Where is the project?"
-              />
-            </div>
+            <input
+              type="text"
+              name="customer_name"
+              value={formData.customer_name}
+              onChange={handleChange}
+              required
+              minLength={2}
+              maxLength={150}
+              placeholder="Enter your full name"
+              className="w-full rounded-lg border border-slate-300 px-4 py-3 outline-none focus:border-amber-500"
+            />
+          </div>
 
-            <div className="md:col-span-2">
-              <label className="block font-semibold mb-2">
-                Describe Your Project *
-              </label>
-              <textarea
-                name="details"
-                value={form.details}
-                onChange={handleChange}
-                required
-                rows="6"
-                className="w-full border border-stone-300 rounded-lg p-3 outline-none focus:ring-2 focus:ring-amber-500"
-                placeholder="Describe the work you need, approximate floor size, preferred materials, etc."
-              />
-            </div>
+          <div>
+            <label className="mb-2 block font-semibold text-slate-800">
+              Phone Number *
+            </label>
 
+            <input
+              type="tel"
+              name="phone_number"
+              value={formData.phone_number}
+              onChange={handleChange}
+              required
+              placeholder="+256..."
+              className="w-full rounded-lg border border-slate-300 px-4 py-3 outline-none focus:border-amber-500"
+            />
+          </div>
+
+          <div>
+            <label className="mb-2 block font-semibold text-slate-800">
+              Email Address (Optional)
+            </label>
+
+            <input
+              type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              placeholder="your@email.com"
+              className="w-full rounded-lg border border-slate-300 px-4 py-3 outline-none focus:border-amber-500"
+            />
+          </div>
+
+          <div>
+            <label className="mb-2 block font-semibold text-slate-800">
+              Service Required *
+            </label>
+
+            <select
+              name="service"
+              value={formData.service}
+              onChange={handleChange}
+              required
+              className="w-full rounded-lg border border-slate-300 bg-white px-4 py-3 outline-none focus:border-amber-500"
+            >
+              <option value="">Select a service</option>
+              <option value="tile_installation">
+                Tile Installation
+              </option>
+              <option value="terrazzo_installation">
+                Terrazzo Installation
+              </option>
+              <option value="terrazzo_polishing">
+                Terrazzo Polishing
+              </option>
+              <option value="floor_repairs">
+                Floor Repairs and Restoration
+              </option>
+              <option value="tile_supply">
+                Tile Supply and Sales
+              </option>
+              <option value="other">
+                Other Services
+              </option>
+            </select>
+          </div>
+
+          <div>
+            <label className="mb-2 block font-semibold text-slate-800">
+              Project Location *
+            </label>
+
+            <input
+              type="text"
+              name="location"
+              value={formData.location}
+              onChange={handleChange}
+              required
+              placeholder="e.g. Kampala, Uganda"
+              className="w-full rounded-lg border border-slate-300 px-4 py-3 outline-none focus:border-amber-500"
+            />
+          </div>
+
+          <div>
+            <label className="mb-2 block font-semibold text-slate-800">
+              Project Description *
+            </label>
+
+            <textarea
+              name="description"
+              value={formData.description}
+              onChange={handleChange}
+              required
+              minLength={10}
+              rows={5}
+              placeholder="Describe the work you need, approximate floor area, materials, or other details..."
+              className="w-full resize-y rounded-lg border border-slate-300 px-4 py-3 outline-none focus:border-amber-500"
+            />
           </div>
 
           <button
             type="submit"
-            className="mt-8 w-full bg-amber-500 hover:bg-amber-400 text-slate-950 py-4 rounded-lg font-bold transition"
+            disabled={loading}
+            className="w-full rounded-lg bg-amber-500 px-6 py-4 font-bold text-slate-950 transition hover:bg-amber-400 disabled:cursor-not-allowed disabled:opacity-60"
           >
-            Send Quotation Request via WhatsApp
+            {loading ? "Submitting Request..." : "Submit Quotation Request"}
           </button>
 
-          <p className="text-sm text-slate-500 mt-4 text-center">
-            Your WhatsApp application will open with your inquiry
-            ready to send. Review it and press Send.
+          <p className="text-center text-sm text-slate-500">
+            Your information will be used to respond to your quotation request.
           </p>
+
         </form>
-      </section>
-    </div>
+      </div>
+    </section>
   );
 }
 
 export default Quote;
+
